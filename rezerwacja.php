@@ -35,26 +35,23 @@ if (isset($_POST['submit'])) {
 
     $url = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=$secret&response=$response&remoteip=$remoteip");
     $result = json_decode($url, TRUE);
-    if ($result['success'] != 1) {
+    if ($result['success'] == 1) {
         //Create an instance; passing `true` enables exceptions
         $mail = new PHPMailer(true);
 
         try {
             //Server settings
-            $mail->isSMTP();                                            //Send using SMTP
-            $mail->Host = 'smtp.mailtrap.io';                     //Set the SMTP server to send through
-            $mail->SMTPAuth = true;                                   //Enable SMTP authentication
-            $mail->Username = '20c4d79f88ea80';                     //SMTP username
-            $mail->Password = 'c296da0d48b5b4';                               //SMTP password
-            $mail->SMTPSecure = 'tls';            //Enable implicit TLS encryption
-            $mail->Port = 2525;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+            $mail->isSMTP();
+            $mail->Host = 'smtp.mailtrap.io';
+            $mail->SMTPAuth = true;
+            $mail->Username = '20c4d79f88ea80';
+            $mail->Password = 'c296da0d48b5b4';
+            $mail->SMTPSecure = 'tls';
+            $mail->Port = 2525;
 
             //Recipients
             $mail->setFrom('info@mailtrap.io', 'Mailer');
-            $mail->addAddress('kubamatuszko@gmail.com');     //Add a recipient
-            $mail->addReplyTo('info@mailtrap.io', 'Information');
-            $mail->addCC('cc@example.com');
-            $mail->addBCC('bcc@example.com');
+            $mail->addAddress('kubamatuszko@gmail.com');
 
 
             //Content
@@ -63,34 +60,76 @@ if (isset($_POST['submit'])) {
             $mail->Body = "
             <html>
             <head>
-              <title>HTML email</title>
+              <title>Rezerwacja wizyty</title>
             </head>
             <body>
-            <p>This email contains HTML Tags!</p>
+            <p>Dane te zostałī wypełnione poprzez formularz na stronie www.naprawaam.pl</p>
             <table>
               <tr>
-                <th>Firstname</th>
-                <th>Lastname</th>
+                <th>Imię</th>
+                <th>Nazwisko</th>
+                <th>Numer telefonu</th>
+                <th>Email</th>
+                <th>Ulica</th>
+                <th>Miejscowość</th>
+                <th>Kraj</th>
+                <th>Kod pocztowy</th>
               </tr>
               <tr>
-                <td>John</td>
-                <td>Doe</td>
+                <th>Typ pojazdu</th>
+                <th>Numer rejestracyjny</th>
+                <th>Numer VIN</th>
+                <th>Marka</th>
+                <th>Model</th>
+                <th>Rok produkcji</th>
+              </tr>
+              <tr>
+                <td>". $_POST['imie'] ."</td>
+                <td>". $_POST['nazwisko'] ."</td>
+                <td>". $_POST['numerTelefonu'] ."</td>
+                <td>". $_POST['email'] ."</td>
+                <td>". $_POST['ulica'] ."</td>
+                <td>". $_POST['miejscowosc'] ."</td>
+                <td>". $_POST['kraj'] ."</td>
+                <td>". $_POST['kodPocztowy'] ."</td>
+              </tr>
+              <tr>
+                <td>". $_POST['typPojazdu'] ."</td>
+                <td>". $_POST['numerRejestracyjny'] ."</td>
+                <td>". $_POST['vin'] ."</td>
+                <td>". $_POST['marka'] ."</td>
+                <td>". $_POST['model'] ."</td>
+                <td>". $_POST['rokProdukcji'] ."</td>
+              </tr>
+            </table>
+            <br>
+            <h1>Zlecenie:</h1>
+            <br>
+            <table>
+              <tr>
+                <th>Opis zlecenia</th>
+                <th>Data</th>
+                <th>SMS</th>
+              </tr>
+              <tr>
+                <td>". $_POST['opisZlecenia'] ."</td>
+                <td>". $_POST['dataZlecenia'] ."</td>
+                <td>". $_POST['smsInfo'] ."</td>
               </tr>
             </table>
             </body>
             </html>
             ";
-            $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
             $message =
-            $mail->send();
+                $mail->send();
             $info =  'Rezerwacja została wysłana';
-            } catch (Exception $e) {
+        } catch (Exception $e) {
             $info =  "Rezerwacja nie może zostać wysłana (skontaktuj się z nami telefonicznie). Kod błędu: {$mail->ErrorInfo}";
-            }
-            } else {
-            $info = 'Błędnie wypełnione pole reCAPTCHA';
-            }
-            }
+        }
+    } else {
+        $info = 'Błędnie wypełnione pole reCAPTCHA';
+    }
+}
 ?>
 
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -225,7 +264,7 @@ if (isset($_POST['submit'])) {
             <div class="row g-3">
               <div class="col-sm-6">
                 <label for="firstName" class="form-label">Imię</label>
-                <input type="text" class="form-control" id="firstName" placeholder="" value="" required>
+                <input type="text" class="form-control" name="imie" id="firstName" placeholder="" value="" required>
                 <div class="invalid-feedback">
                   Wprowadź imię
                 </div>
@@ -233,7 +272,7 @@ if (isset($_POST['submit'])) {
 
               <div class="col-sm-6">
                 <label for="lastName" class="form-label">Nazwisko</label>
-                <input type="text" class="form-control" id="lastName" placeholder="" value="" required>
+                <input type="text" class="form-control" name="nazwisko" id="lastName" placeholder="" value="" required>
                 <div class="invalid-feedback">
                   Wprowadź nazwisko
                 </div>
@@ -243,7 +282,7 @@ if (isset($_POST['submit'])) {
                 <label for="username" class="form-label">Numer telefonu <span class="text-muted">(Opcjonalnie)</span></label>
                 <div class="input-group has-validation">
                   <span class="input-group-text">#</span>
-                  <input type="text" class="form-control" id="username" placeholder="+48 000 000 000">
+                  <input type="text" class="form-control" name="numerTelefonu" id="phoneNumber" placeholder="+48 000 000 000">
                   <div class="invalid-feedback">
                     Wprowadź numer telefonu
                   </div>
@@ -252,7 +291,7 @@ if (isset($_POST['submit'])) {
 
               <div class="col-12">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" required>
+                <input type="email" class="form-control" name="email" id="email" required>
                 <div class="invalid-feedback">
                   Wprowadź poprawny adres email
                 </div>
@@ -260,7 +299,7 @@ if (isset($_POST['submit'])) {
 
               <div class="col-12">
                 <label for="ulica" class="form-label">Ulica</label>
-                <input type="text" class="form-control" id="ulica" required>
+                <input type="text" class="form-control" name="ulica" id="ulica" required>
                 <div class="invalid-feedback">
                   Wprowadź ulicę
                 </div>
@@ -268,7 +307,7 @@ if (isset($_POST['submit'])) {
 
               <div class="col-12">
                 <label for="miejscowosc" class="form-label">Miejscowość</label>
-                <input type="text" class="form-control" id="miejscowosc" required>
+                <input type="text" class="form-control" name="miejscowosc" id="miejscowosc" required>
                 <div class="invalid-feedback">
                   Wprowadź miejscowość
                 </div>
@@ -276,7 +315,7 @@ if (isset($_POST['submit'])) {
 
               <div class="col-md-5">
                 <label for="kraj" class="form-label">Kraj</label>
-                <select class="form-select" id="kraj" required>
+                <select class="form-select" name="kraj" id="kraj" required>
                   <option value="">Wybierz...</option>
                   <option>Polska</option>
                   <option>Inny</option>
@@ -288,7 +327,7 @@ if (isset($_POST['submit'])) {
 
               <div class="col-md-3">
                 <label for="kod_pocztowy" class="form-label">Kod pocztowy</label>
-                <input type="text" class="form-control" id="kod_pocztowy" placeholder="00-000" required>
+                <input type="text" class="form-control" name="kodPocztowy" id="kodPocztowy" placeholder="00-000" required>
                 <div class="invalid-feedback">
                   Wprowadź kod pocztowy
                 </div>
@@ -301,23 +340,23 @@ if (isset($_POST['submit'])) {
 
             <div class="my-3">
               <div class="form-check">
-                <input id="osobowy" name="paymentMethod" type="radio" class="form-check-input" checked required>
+                <input id="osobowy" name="typPojazdu" type="radio" class="form-check-input" checked required>
                 <label class="form-check-label" for="osobowy">Samochód osobowy</label>
               </div>
               <div class="form-check">
-                <input id="dostawczy" name="paymentMethod" type="radio" class="form-check-input" required>
+                <input id="dostawczy" name="typPojazdu" type="radio" class="form-check-input" required>
                 <label class="form-check-label" for="dostawczy">Samochód dostawczy</label>
               </div>
               <div class="form-check">
-                <input id="inne" name="paymentMethod" type="radio" class="form-check-input" required>
+                <input id="inne" name="typPojazdu" type="radio" class="form-check-input" required>
                 <label class="form-check-label" for="inne">Inne</label>
               </div>
             </div>
 
             <div class="row gy-3">
               <div class="col-md-6">
-                <label for="numer_rejestracyjny" class="form-label">Numer rejestracyjny</label>
-                <input type="text" class="form-control" id="numer_rejestracyjny" placeholder="" required>
+                <label for="numerRejestracyjny" class="form-label">Numer rejestracyjny</label>
+                <input type="text" class="form-control" name="numerRejestracyjny" id="numerRejestracyjny" placeholder="" required>
                 <small class="text-muted">Pełny numer rejestracyjny pojazdu</small>
                 <div class="invalid-feedback">
                   Wprowadź numer rejestracyjny pojazdu
@@ -326,7 +365,7 @@ if (isset($_POST['submit'])) {
 
               <div class="col-md-6">
                 <label for="vin" class="form-label">Numer VIN <span class="text-muted">(Opcjonalnie)</span></label>
-                <input type="text" class="form-control" id="vin" placeholder="">
+                <input type="text" class="form-control" name="vin" id="vin" placeholder="">
                 <div class="invalid-feedback">
                   Wprowadź numer VIN
                 </div>
@@ -334,7 +373,7 @@ if (isset($_POST['submit'])) {
 
               <div class="col-md-3">
                 <label for="marka" class="form-label">Marka</label>
-                <input type="text" class="form-control" id="marka" placeholder="" required>
+                <input type="text" class="form-control" name="marka" id="marka" placeholder="" required>
                 <div class="invalid-feedback">
                   Wprowadź markę pojazdu
                 </div>
@@ -342,15 +381,15 @@ if (isset($_POST['submit'])) {
 
               <div class="col-md-3">
                 <label for="model" class="form-label">Model</label>
-                <input type="text" class="form-control" id="model" placeholder="" required>
+                <input type="text" class="form-control" name="model" id="model" placeholder="" required>
                 <div class="invalid-feedback">
                   Wprowadź model pojazdu
                 </div>
               </div>
 
               <div class="col-md-3">
-                <label for="rok-produkcji" class="form-label">Rok produkcji</label>
-                <input type="text" class="form-control" id="rok-produkcji" placeholder="" required>
+                <label for="rokProdukcji" class="form-label">Rok produkcji</label>
+                <input type="text" class="form-control" name="rokProdukcji" id="rokProdukcji" placeholder="" required>
                 <div class="invalid-feedback">
                   Wprowadź rok produkcji pojazdu
                 </div>
@@ -363,8 +402,8 @@ if (isset($_POST['submit'])) {
 
             <div class="gy-3">
               <div class="">
-                <label for="opis-zlecenia" class="form-label">Opis zlecenia</label>
-                <input type="text" class="form-control" id="opis-zlecenia" placeholder="" required>
+                <label for="opisZlecenia" class="form-label">Opis zlecenia</label>
+                <input type="text" class="form-control" name="opisZlecenia" id="opisZlecenia" placeholder="" required>
                 <small class="text-muted">Opis czynności, które chcesz, aby zostały wykonane.</small>
                 <div class="invalid-feedback">
                   Wprowadź opis zlecenia
@@ -372,8 +411,8 @@ if (isset($_POST['submit'])) {
               </div>
 
               <div class="">
-                <label for="data-zlecenia" class="form-label">Data</label>
-                <input type="text" class="form-control" id="data-zlecenia" placeholder="" required>
+                <label for="dataZlecenia" class="form-label">Data</label>
+                <input type="text" class="form-control" name="dataZlecenia" id="dataZlecenia" placeholder="" required>
                 <small class="text-muted">Odpowiednia dla ciebie data, w której możemy wykonać naprawę.</small>
                 <div class="invalid-feedback">
                   Wprowadź numer VIN
@@ -384,8 +423,8 @@ if (isset($_POST['submit'])) {
             <hr class="my-4">
 
             <div class="form-check">
-              <input type="checkbox" class="form-check-input" id="sms-info">
-              <label class="form-check-label" for="sms-info">Proszę o wiadomość SMS, z informacją o dostępnych terminach</label>
+              <input type="checkbox" class="form-check-input" name="smsInfo" id="smsInfo">
+              <label class="form-check-label" for="smsInfo">Proszę o wiadomość SMS, z informacją o dostępnych terminach</label>
             </div>
             <hr class="my-4">
 

@@ -18,28 +18,23 @@ if (isset($_POST['submit'])) {
 
     $url = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=$secret&response=$response&remoteip=$remoteip");
     $result = json_decode($url, TRUE);
-    if ($result['success'] != 1) {
-        echo 'Weryfikacja reCaptcha - poprawna';
+    if ($result['success'] == 1) {
         //Create an instance; passing `true` enables exceptions
         $mail = new PHPMailer(true);
 
         try {
             //Server settings
-            $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
-            $mail->isSMTP();                                            //Send using SMTP
-            $mail->Host = 'smtp.mailtrap.io';                     //Set the SMTP server to send through
-            $mail->SMTPAuth = true;                                   //Enable SMTP authentication
-            $mail->Username = '20c4d79f88ea80';                     //SMTP username
-            $mail->Password = 'c296da0d48b5b4';                               //SMTP password
-            $mail->SMTPSecure = 'tls';            //Enable implicit TLS encryption
-            $mail->Port = 2525;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+            $mail->isSMTP();
+            $mail->Host = 'smtp.mailtrap.io';
+            $mail->SMTPAuth = true;
+            $mail->Username = '20c4d79f88ea80';
+            $mail->Password = 'c296da0d48b5b4';
+            $mail->SMTPSecure = 'tls';
+            $mail->Port = 2525;
 
             //Recipients
             $mail->setFrom('info@mailtrap.io', 'Mailer');
-            $mail->addAddress('kubamatuszko@gmail.com');     //Add a recipient
-            $mail->addReplyTo('info@mailtrap.io', 'Information');
-            $mail->addCC('cc@example.com');
-            $mail->addBCC('bcc@example.com');
+            $mail->addAddress('kubamatuszko@gmail.com');
 
 
             //Content
@@ -47,34 +42,75 @@ if (isset($_POST['submit'])) {
             $mail->Subject = 'Rezerwacja NAPRAWAAM.PL';
             $mail->Body = "
             <html>
-                <head>
-                    <title>HTML email</title>
-                </head>
-                <body>
-                    <p>This email contains HTML Tags!</p>
-                    <table>
-                        <tr>
-                            <th>Firstname</th>
-                            <th>Lastname</th>
-                        </tr>
-                        <tr>
-                            <td>John</td>
-                            <td>Doe</td>
-                        </tr>
-                    </table>
-                </body>
+            <head>
+              <title>Rezerwacja wizyty</title>
+            </head>
+            <body>
+            <p>Dane te zostałī wypełnione poprzez formularz na stronie www.naprawaam.pl</p>
+            <table>
+              <tr>
+                <th>Imię</th>
+                <th>Nazwisko</th>
+                <th>Numer telefonu</th>
+                <th>Email</th>
+                <th>Ulica</th>
+                <th>Miejscowość</th>
+                <th>Kraj</th>
+                <th>Kod pocztowy</th>
+              </tr>
+              <tr>
+                <th>Typ pojazdu</th>
+                <th>Numer rejestracyjny</th>
+                <th>Numer VIN</th>
+                <th>Marka</th>
+                <th>Model</th>
+                <th>Rok produkcji</th>
+              </tr>
+              <tr>
+                <td>". $_POST['imie'] ."</td>
+                <td>". $_POST['nazwisko'] ."</td>
+                <td>". $_POST['numerTelefonu'] ."</td>
+                <td>". $_POST['email'] ."</td>
+                <td>". $_POST['ulica'] ."</td>
+                <td>". $_POST['miejscowosc'] ."</td>
+                <td>". $_POST['kraj'] ."</td>
+                <td>". $_POST['kodPocztowy'] ."</td>
+              </tr>
+              <tr>
+                <td>". $_POST['typPojazdu'] ."</td>
+                <td>". $_POST['numerRejestracyjny'] ."</td>
+                <td>". $_POST['vin'] ."</td>
+                <td>". $_POST['marka'] ."</td>
+                <td>". $_POST['model'] ."</td>
+                <td>". $_POST['rokProdukcji'] ."</td>
+              </tr>
+            </table>
+            <br>
+            <h1>Zlecenie:</h1>
+            <br>
+            <table>
+              <tr>
+                <th>Opis zlecenia</th>
+                <th>Data</th>
+                <th>SMS</th>
+              </tr>
+              <tr>
+                <td>". $_POST['opisZlecenia'] ."</td>
+                <td>". $_POST['dataZlecenia'] ."</td>
+                <td>". $_POST['smsInfo'] ."</td>
+              </tr>
+            </table>
+            </body>
             </html>
             ";
-            $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
             $message =
                 $mail->send();
-            echo 'Wiadomość została wysłana';
+            $info =  'Rezerwacja została wysłana';
         } catch (Exception $e) {
-            echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+            $info =  "Rezerwacja nie może zostać wysłana (skontaktuj się z nami telefonicznie). Kod błędu: {$mail->ErrorInfo}";
         }
     } else {
-        echo 'Błędnie wypełnione pole reCAPTCHA';
+        $info = 'Błędnie wypełnione pole reCAPTCHA';
     }
 }
-
-
+?>
