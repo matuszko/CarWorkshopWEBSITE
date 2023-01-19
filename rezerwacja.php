@@ -55,7 +55,8 @@ if (isset($_POST['submit'])) {
 
 
             //Content
-            $mail->isHTML(true);                                  //Set email format to HTML
+            $mail->isHTML(true);
+            $mail->CharSet = "UTF-8";
             $mail->Subject = 'Rezerwacja NAPRAWAAM.PL';
             $mail->Body = "
             <html>
