@@ -36,7 +36,6 @@ if (isset($_POST['submit'])) {
     $url = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=$secret&response=$response&remoteip=$remoteip");
     $result = json_decode($url, TRUE);
     if ($result['success'] != 1) {
-        echo 'Weryfikacja reCaptcha - poprawna';
         //Create an instance; passing `true` enables exceptions
         $mail = new PHPMailer(true);
 
@@ -84,12 +83,12 @@ if (isset($_POST['submit'])) {
             $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
             $message =
             $mail->send();
-            echo 'Wiadomość została wysłana';
+            $info =  'Rezerwacja została wysłana';
             } catch (Exception $e) {
-            echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+            $info =  "Rezerwacja nie może zostać wysłana (skontaktuj się z nami telefonicznie). Kod błędu: {$mail->ErrorInfo}";
             }
             } else {
-            echo 'Błędnie wypełnione pole reCAPTCHA';
+            $info = 'Błędnie wypełnione pole reCAPTCHA';
             }
             }
 ?>
@@ -394,6 +393,7 @@ if (isset($_POST['submit'])) {
             <hr class="my-4">
 
             <button class="w-100 btn btn-primary btn-lg" name="submit" type="submit">Zatwierdź</button>
+            <?php if(isset($info)) echo $info; ?>
           </form>
         </div>
       </div>
