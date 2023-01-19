@@ -65,34 +65,27 @@ if (isset($_POST['submit'])) {
             </head>
             <body>
             <p>Dane te zostałī wypełnione poprzez formularz na stronie www.naprawaam.pl</p>
-            <table class='table'>
-                <thead class='thead-light'>
-                  <tr>
-                    <th>Imię</th>
-                    <th>Nazwisko</th>
-                    <th>Numer telefonu</th>
-                    <th>Email</th>
-                    <th>Ulica</th>
-                    <th>Miejscowość</th>
-                    <th>Kraj</th>
-                    <th>Kod pocztowy</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>". $_POST['imie'] ."</td>
-                    <td>". $_POST['nazwisko'] ."</td>
-                    <td>". $_POST['numerTelefonu'] ."</td>
-                    <td>". $_POST['email'] ."</td>
-                    <td>". $_POST['ulica'] ."</td>
-                    <td>". $_POST['miejscowosc'] ."</td>
-                    <td>". $_POST['kraj'] ."</td>
-                    <td>". $_POST['kodPocztowy'] ."</td>
-                  </tr>
-                </tbody>
-            </table>
-            <table class='table'>
-            <thead class='thead-light'>
+            <table>
+              <tr>
+                <th>Imię</th>
+                <th>Nazwisko</th>
+                <th>Numer telefonu</th>
+                <th>Email</th>
+                <th>Ulica</th>
+                <th>Miejscowość</th>
+                <th>Kraj</th>
+                <th>Kod pocztowy</th>
+              </tr>
+              <tr>
+                <td>". $_POST['imie'] ."</td>
+                <td>". $_POST['nazwisko'] ."</td>
+                <td>". $_POST['numerTelefonu'] ."</td>
+                <td>". $_POST['email'] ."</td>
+                <td>". $_POST['ulica'] ."</td>
+                <td>". $_POST['miejscowosc'] ."</td>
+                <td>". $_POST['kraj'] ."</td>
+                <td>". $_POST['kodPocztowy'] ."</td>
+              </tr>
               <tr>
                 <th>Typ pojazdu</th>
                 <th>Numer rejestracyjny</th>
@@ -101,8 +94,6 @@ if (isset($_POST['submit'])) {
                 <th>Model</th>
                 <th>Rok produkcji</th>
               </tr>
-            </thead>
-            <tbody>
               <tr>
                 <td>". $_POST['typPojazdu'] ."</td>
                 <td>". $_POST['numerRejestracyjny'] ."</td>
@@ -111,7 +102,6 @@ if (isset($_POST['submit'])) {
                 <td>". $_POST['model'] ."</td>
                 <td>". $_POST['rokProdukcji'] ."</td>
               </tr>
-            </tbody>
             </table>
             <br>
             <h1>Zlecenie:</h1>
